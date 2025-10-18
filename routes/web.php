@@ -538,9 +538,9 @@ Route::middleware([
 
     Route::resource('lancamento-recorrente', 'LancamentoRecorrenteController');
 
-    Route::group(['prefix' => 'LancamentoRecorrente'], function () {
-        Route::get('/{id}/pay', 'LancamentoRecorrenteController@pay')->name('lancamento-recorrente.pay');
-        Route::put('/{id}/payPut', 'LancamentoRecorrenteController@payPut')->name('lancamento-recorrente.payPut');
+    Route::group(['prefix' => 'lancamentoRecorrente'], function () {
+        Route::post('/gerar-previa', 'LancamentoRecorrenteController@gerarPrevia')
+            ->name('lancamento-recorrente.gerar-previa');
     });
 
     Route::group(['prefix' => 'receita'], function () {

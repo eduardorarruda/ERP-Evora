@@ -461,6 +461,10 @@ Route::group(['prefix' => 'appFiscal'],function(){
 
 });
 
+Route::middleware(['api'])->group(function () {
+    Route::post('lancamento-recorrente/gerar-previa', 'LancamentoRecorrenteController@gerarPrevia');
+});
+
 //rotas pdv java
 Route::group(['prefix' => 'pdv'], function(){
 

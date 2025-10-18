@@ -1,67 +1,151 @@
 <div class="row g-3">
+    <!-- Tipo -->
     <div class="col-md-2">
-        {!!Form::text('referencia', 'Referência')->required()
-        !!}
+        <label for="inp-tipo" class="form-label required">Tipo</label>
+        <select class="form-select" name="tipo" id="inp-tipo" required>
+            <option value="credito">Crédito</option>
+            <option value="debito">Débito</option>
+        </select>
     </div>
 
-    <div class="col-md-4">
-        <div class="form-group">
-            <label for="inp-cliente_id" class="required">Cliente</label>
-            <div class="input-group">
-                <select class="form-control" name="cliente_id" id="inp-cliente_id">
-                    @isset($item)
-                    <option value="{{$item->cliente_id}}">{{ $item->cliente->razao_social }}</option>
-                    @endif
-                </select>
-                <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modal-cliente">
-                    <i class="bx bx-plus"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
+    <!-- Número Documento -->
     <div class="col-md-2">
-        {!!Form::select('categoria_id', 'Categoria', $categorias->pluck('nome', 'id')->all())
-        ->attrs(['class' => 'form-select'])->required()
-        !!}
-    </div>
-
-    <div class="col-md-2">
-        {!!Form::tel('valor_integral', 'Valor')->required()
-        ->attrs(['class' => 'moeda'])
-        ->value(isset($item) ? __moeda($item->valor_integral) : '')
-        !!}
-    </div>
-
-    <div class="col-md-2">
-        {!!Form::date('lançamentos_recorrentes', 'Vencimento')->required()
-        !!}
-    </div>
-
-    <div class="col-md-2">
-        {!!Form::select('tipo_pagamento', 'Tipo de pagamento', App\Models\ContaReceber::tiposPagamento())
-        ->attrs(['class' => 'form-select'])
-        !!}
-    </div>
-
-    <div class="col-md-2">
-        {!! Form::text('quantidade_meses', 'Quantidade de Meses')
-        ->attrs([
-        'class' => 'form-control',
-        'pattern' => '[1-9][0-9]*',
-        'inputmode' => 'numeric',
-        'title' => 'Por favor, insira um número inteiro maior que 0.'
-        ])
-        ->value(1)
+        {!!Form::text('referencia', 'Número Documento')
+        ->attrs(['id' => 'inp-referencia'])
         ->required()
         !!}
     </div>
 
-    <div class="col-12">
-        <hr>
+    <!-- Data Movimento -->
+    <div class="col-md-2">
+        {!!Form::date('data_movimento', 'Data Movimento')
+        ->attrs(['id' => 'inp-data_movimento'])
+        ->value(date('Y-m-d'))
+        ->required()
+        !!}
     </div>
 
+    <!-- Dia Vencimento -->
+    <div class="col-md-2">
+        {!!Form::tel('dia_vencimento', 'Dia Vencimento')
+        ->attrs([
+        'id' => 'inp-dia_vencimento',
+        'type' => 'number',
+        'min' => '1',
+        'max' => '31',
+        'placeholder' => '10',
+        'pattern' => '[0-9]*',
+        'inputmode' => 'numeric'
+        ])
+        ->required()
+        !!}
+    </div>
+
+    <!-- Valor -->
+    <div class="col-md-2">
+        {!!Form::tel('valor_integral', 'Valor')
+        ->attrs([
+        'class' => 'moeda form-control',
+        'id' => 'inp-valor_integral'
+        ])
+        ->required()
+        !!}
+    </div>
+
+    <!-- Quantidade de Meses -->
+    <div class="col-md-2">
+        {!!Form::tel('quantidade_meses', 'Quantidade de Meses')
+        ->attrs([
+        'id' => 'inp-quantidade_meses',
+        'type' => 'number',
+        'min' => '1',
+        'max' => '60',
+        'value' => '5',
+        'pattern' => '[0-9]*',
+        'inputmode' => 'numeric'
+        ])
+        ->required()
+        !!}
+    </div>
+
+    <!-- Cliente -->
     <div class="col-md-6">
+        <label for="inp-cliente_id" class="form-label required">Cliente</label>
+        <div class="input-group">
+            <select class="form-control select2" name="cliente_id" id="inp-cliente_id" required>
+                <option value="">Selecione...</option>
+                @foreach($clientes as $cliente)
+                <option value="{{ $cliente->id }}">{{ $cliente->razao_social }}</option>
+                @endforeach
+            </select>
+            <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modal-cliente">
+                <i class="bx bx-plus"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Fornecedor (opcional, dependendo do tipo) -->
+    <div class="col-md-6" id="fornecedor-container" style="display: none;">
+        <label for="inp-fornecedor_id" class="form-label">Fornecedor</label>
+        <div class="input-group">
+            <select class="form-control" name="fornecedor_id" id="inp-fornecedor_id">
+                <option value="">Selecione...</option>
+            </select>
+            <button class="btn btn-primary" type="button">
+                <i class="bx bx-plus"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Forma de Pagamento -->
+    <div class="col-md-3">
+        {!!Form::select('tipo_pagamento', 'Forma de Pagamento',
+        App\Models\ContaReceber::tiposPagamento())
+        ->attrs(['class' => 'form-select', 'id' => 'inp-tipo_pagamento'])
+        ->required()
+        !!}
+    </div>
+
+    <!-- Conta Gerencial 
+    <div class="col-md-3">
+        <label for="inp-conta_gerencial" class="form-label">Conta Gerencial</label>
+        <select class="form-select" name="conta_gerencial" id="inp-conta_gerencial">
+            <option value="">Selecione...</option>
+        </select>
+    </div>-->
+
+    <!-- Centro de Custo 
+    <div class="col-md-3">
+        <label for="inp-centro_custo" class="form-label">Centro de Custo</label>
+        <select class="form-select" name="centro_custo" id="inp-centro_custo">
+            <option value="">Selecione...</option>
+        </select>
+    </div>-->
+
+    <!-- Vendedor 
+    <div class="col-md-3">
+        <label for="inp-vendedor" class="form-label">Vendedor</label>
+        <select class="form-select" name="vendedor" id="inp-vendedor">
+            <option value="">Selecione...</option>
+        </select>
+    </div>-->
+
+    <!-- Categoria -->
+    <div class="col-md-12">
+        {!!Form::select('categoria_id', 'Categoria',
+        $categorias->pluck('nome', 'id')->all())
+        ->attrs(['class' => 'form-select', 'id' => 'inp-categoria_id'])
+        ->required()
+        !!}
+    </div>
+
+    <!-- Separador -->
+    <div class="col-12">
+        <hr class="my-4">
+    </div>
+
+    <!-- Data de Vencimento Inicial no Mês Atual? -->
+    <div class="col-md-12">
         <label class="form-label">Data de Vencimento Inicial no Mês Atual?</label>
         <div>
             <div class="form-check form-check-inline">
@@ -75,205 +159,39 @@
                 <label class="form-check-label" for="vencimento_nao">Não</label>
             </div>
         </div>
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary px-5 mt-3 float-start">Gerar</button>
+    </div>
+
+    <!-- Botão Incluir (Temporariamente oculto, substituído pelo Gerar no header) -->
+    <div class="col-12 d-none">
+        <button type="button" class="btn btn-secondary" id="btn-incluir">
+            <i class="bx bx-plus"></i> Incluir
+        </button>
+    </div>
+
+    <!-- Separador antes da tabela -->
+    <div class="col-12">
+        <hr class="my-4">
+    </div>
+
+    <!-- Grid/Tabela de Lançamentos Gerados -->
+    <div class="col-12">
+        <div id="tabela-container">
+            <!-- A tabela será inserida aqui pelo JavaScript -->
         </div>
     </div>
 
-
-    <hr>
-
-    <div class="col-12 mt-4">
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered" id="tabela-contas-geradas">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Referência</th>
-                        <th>Valor</th>
-                        <th>Vencimento</th>
-                        <th>Tipo de Pagamento</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- As linhas serão preenchidas dinamicamente via JavaScript -->
-                </tbody>
-            </table>
+    <!-- Botão Salvar -->
+    <div class="col-12">
+        <div class="d-flex justify-content-start gap-2 mt-3">
+            <button type="submit" class="btn btn-primary px-5" id="btn-salvar" disabled>
+                <i class="bx bx-save"></i> Salvar
+            </button>
+            <button type="button" class="btn btn-success px-4" id="btn-exportar" disabled>
+                <i class="bx bx-download"></i> Exportar JSON
+            </button>
+            <a href="{{ route('conta-receber.index') }}" class="btn btn-light px-4">
+                <i class="bx bx-arrow-back"></i> Cancelar
+            </a>
         </div>
     </div>
-
-    <div class="col-12">
-        <button type="submit" class="btn btn-primary px-5 float-start">Salvar</button>
-    </div>
-
-    <!-- 
-    
-    <hr>
-
-    @isset($item)
-    {!! __view_locais_select_edit("Local", $item->filial_id) !!}
-    @else
-    {!! __view_locais_select() !!}
-    @endif 
-    
-    <hr>
-     
-    @if(!isset($item))
-    <p class="text-danger">
-        *Campo abaixo deve ser preenchido se ouver recorrência para este registro
-    </p>
-
-    <div class="col-md-2">
-        {!!Form::tel('recorrencia', 'Data')
-        ->attrs(['data-mask' => '00/00'])
-        ->placeholder('mm/aa')
-        !!}
-    </div>
-    @endif 
-
-    <div class="row tbl-recorrencia d-none mt-2">
-    </div>
-
-    <div class="col-12">
-        <button type="submit" class="btn btn-primary px-5 float-end">Salvar</button>
-    </div>-->
 </div>
-
-@section('js')
-
-<script type="text/javascript" src="/js/client.js"></script>
-
-
-<script type="text/javascript">
-$('.modal .select2').each(function() {
-    console.log($(this))
-    let id = $(this).prop('id')
-
-    if (id == 'inp-uf') {
-        $(this).select2({
-            dropdownParent: $(this).parent(),
-            theme: 'bootstrap4',
-        });
-    }
-
-    if (id == 'inp-cidade_id' || id == 'inp-cidade_cobranca_id') {
-
-        $(this).select2({
-
-            minimumInputLength: 2,
-            language: "pt-BR",
-            placeholder: "Digite para buscar a cidade",
-            width: "100%",
-            theme: 'bootstrap4',
-            dropdownParent: $(this).parent(),
-            ajax: {
-                cache: true,
-                url: path_url + 'api/buscaCidades',
-                dataType: "json",
-                data: function(params) {
-                    console.clear()
-                    var query = {
-                        pesquisa: params.term,
-                    };
-                    return query;
-                },
-                processResults: function(response) {
-                    console.log("response", response)
-                    var results = [];
-
-                    $.each(response, function(i, v) {
-                        var o = {};
-                        o.id = v.id;
-
-                        o.text = v.nome + "(" + v.uf + ")";
-                        o.value = v.id;
-                        results.push(o);
-                    });
-                    return {
-                        results: results
-                    };
-                }
-            }
-        });
-    }
-})
-
-$('#btn-store-cliente').click(() => {
-    let valid = validaCamposModal()
-    if (valid.length > 0) {
-        let msg = ""
-        valid.map((x) => {
-            msg += x + "\n"
-        })
-        swal("Ops, erro no formulário", msg, "error")
-    } else {
-        console.log("salvando...")
-
-        let data = {}
-        $(".modal input, .modal select").each(function() {
-
-            let indice = $(this).attr('id')
-            indice = indice.substring(4, indice.length)
-            data[indice] = $(this).val()
-        });
-        data['empresa_id'] = $('#empresa_id').val()
-
-        console.log(data)
-        $.post(path_url + 'api/cliente/store', data)
-            .done((success) => {
-                console.log("success", success)
-                swal("Sucesso", "Cliente cadastrado!", "success")
-                    .then(() => {
-                        var newOption = new Option(success.razao_social, success.id, false, false);
-                        $('#inp-cliente_id').append(newOption).trigger('change');
-                        $('#modal-cliente').modal('hide')
-                    })
-
-            }).fail((err) => {
-                console.log(err)
-                swal("Ops", "Algo deu errado ao salvar cliente!", "error")
-            })
-    }
-})
-
-function adicionarLinhaNaTabela(referencia, valor, vencimento, tipoPagamento) {
-    const tbody = document.querySelector('#tabela-contas-geradas tbody');
-    const row = tbody.insertRow();
-
-    row.insertCell(0).textContent = referencia;
-    row.insertCell(1).textContent = valor;
-    row.insertCell(2).textContent = vencimento;
-    row.insertCell(3).textContent = tipoPagamento;
-}
-
-
-$('#inp-recorrencia').blur(() => {
-
-    let data = $('#inp-recorrencia').val()
-    if (data.length == 5) {
-        let vencimento = $('#inp-data_vencimento').val()
-        let valor = $('#inp-valor_integral').val()
-        if (valor && vencimento) {
-            let item = {
-                data: data,
-                vencimento: vencimento,
-                valor: valor
-            }
-            $.get(path_url + 'api/conta-receber/recorrencia', item)
-                .done((html) => {
-                    console.log("success", html)
-                    $('.tbl-recorrencia').html(html)
-                    $('.tbl-recorrencia').removeClass('d-none')
-
-                }).fail((err) => {
-                    console.log(err)
-
-                })
-        } else {
-            swal("Algo saiu errado", "Informe o valor e vencimento data conta base!", "warning")
-        }
-    } else {
-        swal("Algo saiu errado", "Informe uma data válida mm/aa exemplo 12/25", "warning")
-    }
-})
-</script>
-@endsection

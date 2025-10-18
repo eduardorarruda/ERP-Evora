@@ -2,7 +2,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "keywords": [
+        "framework",
+        "laravel"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
@@ -48,8 +51,9 @@
             "app/Helpers/Menu.php",
             "app/Helpers/BoletoHelper.php",
             "app/Helpers/ProdutoGrade.php",
-            "app/Helpers/Functions.php",    
-            "app/Helpers/PedidoEcommerceHelper.php"
+            "app/Helpers/Functions.php",
+            "app/Helpers/PedidoEcommerceHelper.php",
+            "app/Helpers/LancamentoHelper.php"
         ]
     },
     "autoload-dev": {
